@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - 'v*.*.*'
-
+  workflow_dispatch:  # 加這行，允許手動觸發
 jobs:
   build-windows:
     runs-on: ubuntu-latest  # 用 Linux runner 跑 cross compile
