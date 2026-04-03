@@ -16,6 +16,7 @@ use std::collections::HashMap;
 const LOCALE_DEFINITIONS: &[(&str, &str)] = &[
     ("en", include_str!("../i18n/en.ftl")),
     ("pl", include_str!("../i18n/pl.ftl")),
+    ("zh", include_str!("../i18n/zh-Hant.ftl")),
 ];
 const FALLBACK_LOCALE: &str = "en";
 
