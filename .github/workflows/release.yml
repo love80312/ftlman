@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest  # 用 Linux runner 跑 cross compile
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install nightly Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: x86_64-pc-windows-gnu
+
+      - name: Install cross-compile toolchain
+        run: sudo apt-get install -y gcc-mingw-w64-x86-64
+
+      - name: Build
+        run: |
+          cargo +nightly build \
+            --features portable-release \
+            --target x86_64-pc-windows-gnu \
+            --release
+
+      - name: Strip binary
+        run: |
+          llvm-strip --strip-all \
+            target/x86_64-pc-windows-gnu/release/ftlman.exe
+
+      - name: Package
+        run: |
+          mkdir -p ftlman/mods
+          cp target/x86_64-pc-windows-gnu/release/ftlman.exe ftlman/
+          7z a ftlman-x86_64-pc-windows-gnu.zip ftlman
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ftlman-x86_64-pc-windows-gnu.zip
