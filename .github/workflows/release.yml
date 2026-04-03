@@ -1,14 +1,11 @@
-name: Release
+name: Build
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-  workflow_dispatch:  # 加這行，允許手動觸發
+  workflow_dispatch:
+
 jobs:
   build-windows:
-    runs-on: ubuntu-latest  # 用 Linux runner 跑 cross compile
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,7 +36,8 @@ jobs:
           cp target/x86_64-pc-windows-gnu/release/ftlman.exe ftlman/
           7z a ftlman-x86_64-pc-windows-gnu.zip ftlman
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload
+        uses: actions/upload-artifact@v4
         with:
-          files: ftlman-x86_64-pc-windows-gnu.zip
+          name: ftlman-windows
+          path: ftlman-x86_64-pc-windows-gnu.zip
